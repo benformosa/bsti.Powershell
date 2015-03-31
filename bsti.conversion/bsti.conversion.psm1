@@ -112,6 +112,69 @@ function ConvertTo-Timespan()
   }
 }
 
+function ConvertTo-Bytes()
+{
+  <#  
+    .SYNOPSIS
+    Converts string values like "1m", "1gb", "1t" to bytes.  Largely unnecessary because Powershell implicitly converts values like 50mb for you.  Howerver, it is useful when you are trying to interpret
+      string values where you can't control the output.  Linux df -h is a good example.
+    
+    .PARAMETER DataSize
+    Specifies the string data value to convert.  Specify a number of units (as an integer) followed by a unit type.  Unit Types:
+    b = bytes
+    k or kb = kilobytes
+    m or mb = megabytes
+    g or gb = gigabytes
+    t or tb = terabytes
+    p or pb = petabytes
+    e or eb = exabytes
+    
+    .PARAMETER Base
+    Specifies whether you are using base 10 or base 2 sizing.  
+    Base 10 - 1 MB (Megabyte) = 1000 kilobytes 
+    Base 2  - 1 MiB (Mebibyte) = 1024 kilobytes 
+    Default is base 2.
+      
+    .EXAMPLE 
+    PS> ConvertTo-Bytes -DataSize "1mb"       
+    # 1 Mib = 1024 kb
+    
+    .EXAMPLE
+    PS> ConvertTo-Bytes -DataSize "1m" -Base 10   
+    # 1 MB = 1000 kb
+    
+    .EXAMPLE
+    PS> ConvertTo-Bytes -DataSize "1tb"  
+    # 1 Tib = 1024 GB    
+    
+  #>
+  [CmdletBinding()]
+  param
+  (
+    [ValidatePattern("\d+(b|k|m|g|t|p|e)?b?`$")][string] $DataSize,
+    [int] $Base = 2
+  )
+  
+  $units = @("k","m","g","t","p","e")
+  $str = ($DataSize -ireplace "[a-z]|[A-Z]|\+|\-", "").Trim()
+
+  #  Determine the multiplier for the power, which is based on the unit type:
+  $index = 0
+  $unitType = $units | Where-Object { $DataSize -imatch $_ }
+  if ( $unitType )
+  {
+    $index = $units.IndexOf($unitType.ToLower()) + 1
+  }
+  
+  #  Determine the power:  10 for base 2, 3 for base 10:
+  $pow = 10
+  if ( $Base -ieq 10 )
+  {
+    $pow = 3
+  }
+  
+  [double]($str) * [Math]::Pow($Base,($pow * $index))
+}
 
 #############################################################################################################################################
 #  MAIN
