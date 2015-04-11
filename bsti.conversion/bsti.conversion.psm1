@@ -10,6 +10,7 @@
     
   REVISION HISTORY
   03/28/15 BSTI:  Created
+  03/30/15 BSTI: Added ConvertTo-Bytes function.
     
   .EXAMPLE
   #  Include this module in your script:
