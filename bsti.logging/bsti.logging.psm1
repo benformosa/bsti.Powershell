@@ -359,7 +359,7 @@ function Write-Message()
       #  Add the timestamp:
     	if ( !$NoTimeStamp )
     	{
-    		$msg = ("{0:mm/dd/yyyy hh:mm:ss tt} - {1}" -f (Get-Date),$msg)
+    		$msg = ("{0:MM/dd/yyyy hh:mm:ss tt} - {1}" -f (Get-Date),$msg)
     	}
       
       #  Write to the console:  
