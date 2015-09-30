@@ -164,7 +164,7 @@ function ConvertTo-Bytes()
   $unitType = $units | Where-Object { $DataSize -imatch $_ }
   if ( $unitType )
   {
-    $index = $units.IndexOf($unitType.ToLower()) + 1
+    $index = [array]::IndexOf($units, $unitType.ToLower()) + 1
   }
   
   #  Determine the power:  10 for base 2, 3 for base 10:
