@@ -37,6 +37,34 @@ function Get-Timestamp()
   "{0:MMddyyyyHHmmss}" -f (Get-Date)
 }
 
+function Test-ValidColorName() 
+{
+  <#
+  .SYNOPSIS
+  Returns $true if a string is the name of a PowerShell console color.
+
+  .PARAMETER Name
+  String to test
+
+  .INPUTS
+  You can also input Name via the pipeline.
+  #>
+
+  [CmdletBinding()]
+  param
+  (
+    [Parameter(Mandatory=$true,ValueFromPipeline=$true)] $Name
+  )
+
+  if ($Name.getType() -ne [String]) {
+    return $false
+  }
+
+  $Colors = [Enum]::GetValues( [ConsoleColor] )
+  $ColorNames = $Colors | % { $_.toString() }
+  return $ColorNames.contains($Name)
+}
+
 function Remove-LogFiles()
 {
   <#
@@ -346,7 +374,7 @@ function Write-Message()
     }
 
     #  Powershell ISE does not show a default UI foreground color.  Default to DarkYellow.
-    if ( $ForegroundColor -ieq -1 )
+    if ( ( $ForegroundColor -ieq -1 ) -or ( -Not ( Test-ValidColorName $ForegroundColor ) ) )
     {
       $ForegroundColor = "DarkYellow"
     }
