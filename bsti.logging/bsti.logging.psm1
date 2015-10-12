@@ -326,7 +326,7 @@ function Write-Message()
     [Parameter(Position=0,ValueFromPipeline=$true)][string[]] $Message, 
     [string] $LogFile, 
     [Alias("OmitTimestamp")][switch] $NoTimeStamp, 
-    [string] $ForegroundColor = $host.ui.rawui.ForegroundColor,
+    [string] $ForegroundColor,
     [switch] $WriteVerbose,
     [switch] $WriteError,
     [switch] $WriteDebug,
