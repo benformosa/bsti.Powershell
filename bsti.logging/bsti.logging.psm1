@@ -62,7 +62,7 @@ function Test-ValidColorName()
 
   $Colors = [Enum]::GetValues( [ConsoleColor] )
   $ColorNames = $Colors | % { $_.toString() }
-  return $ColorNames.contains($Name)
+  return $ColorNames -contains $Name
 }
 
 function Remove-LogFiles()
